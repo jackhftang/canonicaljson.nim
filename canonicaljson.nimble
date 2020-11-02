@@ -11,7 +11,7 @@ bin           = @[]
 
 # Dependencies
 
-requires "nim >= 1.2.0"
+requires "nim >= 1.0.0"
 
 proc updateNimbleVersion(ver: string) =
   let fname = "canonicaljson.nimble"
@@ -34,23 +34,6 @@ task version, "update version":
   else:
     withDir thisDir(): 
       updateNimbleVersion(ver)
-
-proc renamePackage(fname, tname: string) =
-  let nimbleFile = tname & ".nimble"
-  mvFile("src/" & fname & ".nim", "src/" & tname & ".nim")
-  mvFile(fname & ".nimble", nimbleFile)
-  let t1 = readFile(nimbleFile)
-  let t2 = t1.replace("canonicaljson", tname)
-  writeFile(nimbleFile, t2)
-
-task rename, "rename package":
-  let pname = paramStr( paramCount() )
-  if pname == "rename":
-    echo "no package name provided"
-    quit 1
-  else:
-    withDir thisDir():
-      renamePackage("canonicaljson", pname)
 
 task docgen, "generate docs":
   exec "nim doc --out:docs/index.html --project src/canonicaljson.nim"

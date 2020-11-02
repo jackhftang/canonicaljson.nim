@@ -33,6 +33,8 @@ proc addJString(result: var string, s: string) =
   result.add('"')
 
 proc canonicalizeJson*(result: var string, node: JsonNode) =  
+  ## Append canonical JSON to string.
+  
   var comma = false
   case node.kind:
   of JArray:
@@ -69,7 +71,7 @@ proc canonicalizeJson*(result: var string, node: JsonNode) =
     result.add "null"
 
 proc canonicalizeJson*(json: JsonNode): string = 
-  ## Convert JsonNode to string according to RFC8785
+  ## Convert JsonNode to string according to RFC8785.
   canonicalizeJson(result, json)
   
 

@@ -4,7 +4,7 @@ Stringify JSON according to [RFC8785](https://tools.ietf.org/html/rfc8785).
 
 ## Usage 
 
-[API](https://jackhftang.github.io/canonicaljson.nim/)
+[API](https://jackhftang.github.io/canonicaljson.nim/canonicaljson.html)
 
 ```nim
 let s = canonicalizeJson(%*{

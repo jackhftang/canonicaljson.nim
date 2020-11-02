@@ -1,45 +1,19 @@
-# My Nim Github Template 
+# canonicaljson 
 
+Stringify JSON according to [RFC8785](https://tools.ietf.org/html/rfc8785). Canonical JSON is useful for ryptographic operations.
 
-## Usage
+## Usage 
 
-```sh
-PACKAGE_NAME="new_package_name_here"
-FOLDER_NAME=$PACKAGE_NAME.nim
-git clone git@github.com:jackhftang/my_nim_github_template.git $FOLDER_NAME
-cd $FOLDER_NAME
-nimble rename $PACKAGE_NAME
-rm -rf .git
-git init .
-git add --all
-git commit -a -m "start from template"
+```nim
+let s = canonicalizeJson(%*{
+  "numbers": [333333333.33333329, 1E30, 4.50,
+              2e-3, 0.000000000000000000000000001],
+  "string": "\u20ac$\u000f\u000aA'\u0042\u0022\u005c\\\"/",
+  "literals": [newJNull(), true, false]
+})
+
+assert s == """{"literals":[null,true,false],"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27],"string":"€$\u000f\nA'B\"\\\\\"/"}"""
 ```
-
-## Feature 
-
-- travis integration
-- [release-it](https://github.com/release-it/release-it) integration
-- recursively include files under /src with suffer `_test.nim` to test
-
-## Tasks 
-
-- `docgen` to generate docs
-- `release_patch`, `release_minor`, `release_major` to auto versioning, run test, update nimble version, generate docs and release
-- `rename` used to rename this template into new project name
-
-## Directories
-
-`/bin` folder for compiled binary, git-ignored.
-
-`/docs` folder for `nimble docgen`, match the name of github page. 
-
-`/examples` folder for public code snippets, git-ed.
-
-`/src` folder for source files.
-
-`/test` folder for test files.
-
-`/var` folder for quick, usually temporary try-out files. git-ignored. 
 
 
 

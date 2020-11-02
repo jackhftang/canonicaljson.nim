@@ -24,7 +24,7 @@ proc addJString(result: var string, s: string) =
       result.add "\\u00"
       let n = ord(c)
       let a = n shr 4
-      let b = n - a
+      let b = n and 0xF
       result.add hex[a]
       result.add hex[b]
     of '\\': result.add "\\\\"

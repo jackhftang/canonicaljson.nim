@@ -29,3 +29,5 @@ suite "canonicaljson":
     assert s.len == ans.len
     for i in 0 ..< ans.len:
       assert s[i].ord == ans[i], "mismatch at position " & $i
+    
+    assert s == """{"literals":[null,true,false],"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27],"string":"€$\u000f\nA'B\"\\\\\"/"}"""

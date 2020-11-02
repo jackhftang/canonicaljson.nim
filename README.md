@@ -1,8 +1,10 @@
 # canonicaljson 
 
-Stringify JSON according to [RFC8785](https://tools.ietf.org/html/rfc8785). Canonical JSON is useful for ryptographic operations.
+Stringify JSON according to [RFC8785](https://tools.ietf.org/html/rfc8785).
 
 ## Usage 
+
+[API](https://jackhftang.github.io/canonicaljson.nim/)
 
 ```nim
 let s = canonicalizeJson(%*{
@@ -14,6 +16,4 @@ let s = canonicalizeJson(%*{
 
 assert s == """{"literals":[null,true,false],"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27],"string":"€$\u000f\nA'B\"\\\\\"/"}"""
 ```
-
-
 

@@ -36,7 +36,7 @@ task version, "update version":
       updateNimbleVersion(ver)
 
 task docgen, "generate docs":
-  exec "nim doc --out:docs/index.html --project src/canonicaljson.nim"
+  exec "nim doc --out:docs --project src/canonicaljson.nim"
 
 task release_patch, "release with patch increment":
   exec "release-it --ci -i patch"

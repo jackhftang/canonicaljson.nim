@@ -6,7 +6,9 @@ suite "addJFloat":
   test "addJFloat":
     require: addJFloat(100/7) == "14.28571428571428"
     require: addJFloat(1/3) == "0.3333333333333333"
+    require: addJFloat(-1/3) == "-0.3333333333333333"
     require: addJFloat(2/3) == "0.6666666666666666"
+    require: addJFloat(-2/3) == "-0.6666666666666666"
     require: addJFloat(1e23) == "1e+23"
 
   test "1e+xx":

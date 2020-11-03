@@ -122,12 +122,13 @@ proc addJFloat*(result: var string, f: float) =
         result.addRepeated('0', -n)
         result.addInt(digits, 0, k)
       elif k == 1:
-        # 1eXX
+        # 1e+XX
         result.addInt(digits[0])
         result.add 'e'
         if n >= 0: result.add '+'
         result.addInt(n-1)
       else:
+        # x.xxxe+xxx
         result.addInt digits[0]
         result.add '.'
         result.addInt(digits, 1, k)

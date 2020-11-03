@@ -29,8 +29,8 @@ suite "canonicaljson":
     let s = canonicalizeJson(input)
     # echo s
     # echo ans.mapIt(char(it)).join("")
-    assert s.len == ans.len
-    assert s == ans.mapIt(char(it)).join("")
+    check: s.len == ans.len
+    check: s == ans.mapIt(char(it)).join("")
     for i in 0 ..< ans.len:
       assert s[i].ord == ans[i], "mismatch at position " & $i
 

@@ -27,8 +27,16 @@ proc addJFloat*(result: var string, f: float) =
     else:
       # precondition: f > 0
       const B = 10.0
-      var w = ceil(log10(f))
       var digits = newSeqOfCap[byte](16)
+      # var w = 0
+      # var v = f
+      # while v >= 1.0:
+      #   v /= B
+      #   w += 1
+      # while v < 0.1:
+      #   v *= B
+      #   w -= 1
+      var w = ceil(log10(f))
       let v = f / pow(B, w)
       
       var mx = 1.0      # upper bound in decimal

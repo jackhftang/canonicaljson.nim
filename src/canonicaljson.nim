@@ -3,6 +3,16 @@ import algorithm
 
 # https://tools.ietf.org/html/rfc8785
 
+proc cmpJString*(a,b: string): int =
+  let l = min(a.len, b.len)
+  for i in 0..<l:
+    let t = a[i].ord - b[i].ord
+    if t < 0: return -1
+    if t > 0: return 1
+  if a.len > b.len: return 1
+  if a.len < b.len: return -1
+  return 0
+
 proc addJString(result: var string, s: string) = 
   ## Append canonical JSON to string
 
@@ -49,7 +59,7 @@ proc canonicalizeJson*(result: var string, node: JsonNode) =
     var keys: seq[string]
     for key in node.keys:
       keys.add key
-    keys.sort()
+    keys = keys.sorted(cmpJString)
     for key in keys:
       if comma: result.add ","
       else: comma = true

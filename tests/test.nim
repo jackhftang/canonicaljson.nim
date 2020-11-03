@@ -110,18 +110,16 @@ suite "canonicaljson":
     let ans = """{"amount":500,"curency":"USD","from_account":"543 232 625-3","to_account":"321 567 636-4"}"""
     assert  canonicalizeJson(json) == ans
 
-  # test "sample 2":
-  #   # https://github.com/erdtman/canonicalize
-  #   let json = %*{
-  #       "1": {"f": {"f":  "hi","F":  5} ,"\n":  56.0},
-  #       "10": { },
-  #       "":  "empty",
-  #       "a": { },
-  #       "111": [ {"e":  "yes","E":  "no" } ],
-  #       "A": { }
-  #   }
-  #   let ans = """{"":"empty","1":{"\n":56,"f":{"F":5,"f":"hi"}},"10":{},"111":[{"E":"no","e":"yes"}],"A":{},"a":{}}"""
-  #   let s =  canonicalizeJson(json)
-  #   echo ans
-  #   echo s
-  #   assert s == ans
+  test "sample 2":
+    # https://github.com/erdtman/canonicalize
+    let json = %*{
+        "1": {"f": {"f":  "hi","F":  5} ,"\n":  56.0},
+        "10": { },
+        "":  "empty",
+        "a": { },
+        "111": [ {"e":  "yes","E":  "no" } ],
+        "A": { }
+    }
+    let ans = """{"":"empty","1":{"\n":56,"f":{"F":5,"f":"hi"}},"10":{},"111":[{"E":"no","e":"yes"}],"A":{},"a":{}}"""
+    let s =  canonicalizeJson(json)
+    assert s == ans

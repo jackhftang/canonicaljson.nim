@@ -1,5 +1,6 @@
 import json
 import algorithm
+import canonicaljson/add_j_float
 
 # https://tools.ietf.org/html/rfc8785
 
@@ -52,7 +53,7 @@ proc canonicalizeJson*(result: var string, node: JsonNode) =
     for child in node.elems:
       if comma: result.add ","
       else: comma = true
-      result.toUgly child
+      result.canonicalizeJson child
     result.add "]"
   of JObject:
     result.add "{"
@@ -74,7 +75,7 @@ proc canonicalizeJson*(result: var string, node: JsonNode) =
     else: result.addInt(node.num)
   of JFloat:
     when defined(js): result.add($node.fnum)
-    else: result.addFloat(node.fnum)
+    else: result.addJFloat(node.fnum)
   of JBool:
     result.add(if node.bval: "true" else: "false")
   of JNull:

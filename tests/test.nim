@@ -70,3 +70,58 @@ suite "canonicaljson":
     assert s == ans.mapIt(char(it)).join("")
     for i in 0 ..< ans.len:
       assert s[i].ord == ans[i], "mismatch at position " & $i
+
+  test "object key sorting 1":
+    let json = %*{
+      "aa": 3,
+      "": 0,
+      "a": 2,
+      "A": 1,
+    }
+    let s = canonicalizeJson(json)
+    assert s == """{"":0,"A":1,"a":2,"aa":3}"""
+
+  # test "object key sorting 2":
+  #   let json = %*{
+  #     "\u20ac": "Euro Sign",
+  #     "\r": "Carriage Return",
+  #     "\ufb33": "Hebrew Letter Dalet With Dagesh",
+  #     "1": "One",
+  #     "\ud83d\ude00": "Emoji: Grinning Face",
+  #     "\u0080": "Control",
+  #     "\u00f6": "Latin Small Letter O With Diaeresis"
+  #   }
+  #   let ans = """{"\r":"Carriage Return","1":"One","":"Control","ö":"Latin Small Letter O With Diaeresis","€":"Euro Sign","😀":"Emoji: Grinning Face","דּ":"Hebrew Letter Dalet With Dagesh"}"""
+  #   let s = canonicalizeJson(json)
+  #   echo s
+  #   echo ans
+  #   echo s.len
+  #   echo ans.len
+  #   assert ans == s
+
+  test "sample 1":
+    # https://github.com/erdtman/canonicalize
+    let json = %*{
+      "from_account": "543 232 625-3",
+      "to_account": "321 567 636-4",
+      "amount": 500,
+      "curency": "USD"
+    }
+    let ans = """{"amount":500,"curency":"USD","from_account":"543 232 625-3","to_account":"321 567 636-4"}"""
+    assert  canonicalizeJson(json) == ans
+
+  # test "sample 2":
+  #   # https://github.com/erdtman/canonicalize
+  #   let json = %*{
+  #       "1": {"f": {"f":  "hi","F":  5} ,"\n":  56.0},
+  #       "10": { },
+  #       "":  "empty",
+  #       "a": { },
+  #       "111": [ {"e":  "yes","E":  "no" } ],
+  #       "A": { }
+  #   }
+  #   let ans = """{"":"empty","1":{"\n":56,"f":{"F":5,"f":"hi"}},"10":{},"111":[{"E":"no","e":"yes"}],"A":{},"a":{}}"""
+  #   let s =  canonicalizeJson(json)
+  #   echo ans
+  #   echo s
+  #   assert s == ans

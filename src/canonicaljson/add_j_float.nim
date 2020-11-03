@@ -1,39 +1,4 @@
-import math, strutils
-
-proc succ*(f: float): float =
-  let t = cast[uint64](f)
-  
-  # support positive float only
-  let sgn = t shr 63
-  assert sgn == 0
-
-  let exp = t shr 52
-  let fra = t and 0xFFFFFFFFFFFFFu64
-  
-  if fra != 0xFFFFFFFFFFFFFu64:
-    result = cast[float]((exp shl 52) or (fra+1))
-  elif exp != 0x7FF:
-    result = cast[float]((exp+1) shl 52)
-  else:
-    # enough for your usage
-    result = f
-
-proc pred*(f: float): float =
-  let t = cast[uint64](f)
-  
-  # support positive float only
-  let sgn = t shr 63
-  assert sgn == 0
-
-  let exp = t shr 52
-  let fra = t and 0xFFFFFFFFFFFFFu64
-  
-  if fra != 0:
-    result = cast[float]((exp shl 52) or (fra-1))
-  elif exp != 0:
-    result = cast[float](((exp-1) shl 52) or 0xFFFFFFFFFFFFFu64)
-  else:
-    result = f
+import math
 
 proc addInt*(result: var string, b: byte) {.inline.} =
   result.add char(b + 48)
@@ -63,50 +28,65 @@ proc addJFloat*(result: var string, f: float) =
       # precondition: f > 0
       const B = 10.0
       var w = ceil(log10(f))
-      var digits = newSeqOfCap[byte](18)
+      var digits = newSeqOfCap[byte](16)
       let v = f / pow(B, w)
-      let up = v.succ   # upper bound in binary 
-      let lo = v.pred   # lower bound in binary
-
+      
       var mx = 1.0      # upper bound in decimal
       var mi = 0.0      # lower bound in decimal
 
       # loop while mi <= lo < up <= mx
       var q = v
       var g = 1.0
-      while mi < lo and up < mx:
+      while true:
         q *= B
         let d = floor(q)
         q -= d
 
         g /= B
-        mx = mi + (d+1)*g
-        mi = mi + d*g
+        let mi2 = mi + d*g
+        let mx2 = mi2 + g
 
-        digits.add byte(d)
+        if digits.len >= 16:
+          # in theory, at most 15 (~15.95) significant decimal,
+          # but current libraries output 16 digits.
+          if d >= 5:
+            digits[^1] += 1
+          break
+        elif v <= mi2:
+          if mi2 - v < v - mi:
+            # mi2 is closer to v
+            digits.add byte(d)
+          break
+        elif mx2 <= v:
+          if v - mx2 < mx - v:
+            # mx2 is closer to v
+            digits.add byte(d)
+          # add carry
+          digits[^1] += 1
+          break
+        else:
+          # valid bound
+          mx = mx2
+          mi = mi2
+          digits.add byte(d)
 
-      # add carry if q is closer to mx
-      if mx - v < v - mi:
-        let l = digits.len - 1
-        for i in 0..l:
-          digits[l-i] += 1
-          if digits[l-i] == 10:
-            digits.setLen(digits.len-1)
-          else:
-            break
-          
       # remove trailing 0
-      while digits.len > 0 and digits[digits.len-1] == 0:
+      while digits.len > 0 and digits[^1] == 0:
         digits.setLen(digits.len-1)
 
-      # always has an implicit 1
+      # normalize digits
+      while digits.len > 0 and digits[^1] == 10:
+        digits.setLen(digits.len-1)
+        if digits.len > 0: 
+          digits[^1] += 1
+
+      # if no digits, has an implicit 1
       if digits.len == 0:
         digits.add 1
         w += 1
       
       let k = digits.len
       let n = w.int       # f = 0.ddd * 10^n
-      # echo "n=", n, " k=", k, " d=", digits 
       if k <= n and n <= 21:
         # whole number
         result.addInt(digits, 0, k)

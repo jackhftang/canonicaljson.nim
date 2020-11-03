@@ -29,8 +29,6 @@ suite "canonicaljson":
     let s = canonicalizeJson(input)
     # echo s
     # echo ans.mapIt(char(it)).join("")
-    # echo $input
-
     assert s.len == ans.len
     assert s == ans.mapIt(char(it)).join("")
     for i in 0 ..< ans.len:

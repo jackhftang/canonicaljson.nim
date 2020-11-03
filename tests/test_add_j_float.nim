@@ -4,16 +4,16 @@ import ../src/canonicaljson/add_j_float
 suite "addJFloat":
 
   test "addJFloat":
-    check: addJFloat(1/3) == "0.3333333333333333"
-    check: addJFloat(1/4) == "0.25"
-    check: addJFloat(1/5) == "0.2"
-    check: addJFloat(1/6) == "0.1666666666666667"
-    check: addJFloat(1/7) == "0.1428571428571428"
-    check: addJFloat(1/9) == "0.1111111111111111"
-    check: addJFloat(1/11) == "0.0909090909090909"
-    check: addJFloat(1/13) == "0.07692307692307693"
-    check: addJFloat(2/3) == "0.6666666666666666"
-    check: addJFloat(100/7) == "14.28571428571429"
+    check: addJFloat(1/3)   == "0.3333333333333333"
+    check: addJFloat(1/4)   == "0.25"
+    check: addJFloat(1/5)   == "0.2"
+    check: addJFloat(1/6)   == "0.1666666666666667"
+    check: addJFloat(1/7)   == "0.1428571428571428"
+    check: addJFloat(1/9)   == "0.1111111111111111"
+    check: addJFloat(1/11)  == "0.0909090909090909"
+    check: addJFloat(1/13)  == "0.0769230769230769"
+    check: addJFloat(2/3)   == "0.6666666666666666"
+    check: addJFloat(100/7) == "14.28571428571428"
     check: addJFloat(-1/3) == "-0.3333333333333333"
     check: addJFloat(-2/3) == "-0.6666666666666666"
     

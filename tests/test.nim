@@ -64,10 +64,8 @@ suite "canonicaljson":
     let s = canonicalizeJson(newJString(
         "\0\1\2\3\4\5\6\7\8\9\10\11\12\13\14\15\16\17\18\19\20\21\22\23\24\25\26\27\28\29\30\31"));
 
-    assert s.len == ans.len
-    assert s == ans.mapIt(char(it)).join("")
-    for i in 0 ..< ans.len:
-      assert s[i].ord == ans[i], "mismatch at position " & $i
+    check: s.len == ans.len
+    check: s == ans.mapIt(char(it)).join("")
 
   test "object key sorting 1":
     let json = %*{
@@ -77,7 +75,7 @@ suite "canonicaljson":
       "A": 1,
     }
     let s = canonicalizeJson(json)
-    assert s == """{"":0,"A":1,"a":2,"aa":3}"""
+    check: s == """{"":0,"A":1,"a":2,"aa":3}"""
 
   # test "object key sorting 2":
   #   let json = %*{
@@ -106,7 +104,7 @@ suite "canonicaljson":
       "curency": "USD"
     }
     let ans = """{"amount":500,"curency":"USD","from_account":"543 232 625-3","to_account":"321 567 636-4"}"""
-    assert  canonicalizeJson(json) == ans
+    check: canonicalizeJson(json) == ans
 
   test "sample 2":
     # https://github.com/erdtman/canonicalize
@@ -120,4 +118,4 @@ suite "canonicaljson":
     }
     let ans = """{"":"empty","1":{"\n":56,"f":{"F":5,"f":"hi"}},"10":{},"111":[{"E":"no","e":"yes"}],"A":{},"a":{}}"""
     let s =  canonicalizeJson(json)
-    assert s == ans
+    check: s == ans

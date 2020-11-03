@@ -27,56 +27,37 @@ proc addJFloat*(result: var string, f: float) =
     else:
       # precondition: f > 0
       const B = 10.0
-      var digits = newSeqOfCap[byte](16)
-      # var w = 0
-      # var v = f
-      # while v >= 1.0:
-      #   v /= B
-      #   w += 1
-      # while v < 0.1:
-      #   v *= B
-      #   w -= 1
+      var digits = newSeqOfCap[byte](18)
       var w = ceil(log10(f))
       let v = f / pow(B, w)
       
-      var mx = 1.0      # upper bound in decimal
-      var mi = 0.0      # lower bound in decimal
-
-      # loop while mi <= lo < up <= mx
-      var q = v
+      var lo = 0.0      # lower bound in decimal
       var g = 1.0
       while true:
-        q *= B
-        let d = floor(q)
-        q -= d
-
+        let up = lo + g
         g /= B
-        let mi2 = mi + d*g
-        let mx2 = mi2 + g
 
-        if digits.len >= 16:
-          # in theory, at most 15 (~15.95) significant decimal,
-          # but current libraries output 16 digits.
-          if d >= 5:
+        let mx = up/g
+        let mi = lo/g
+        if round(mx - mi) != B:
+          # base B is no more valid
+          if up - v <= v - lo:
+            # up is close to v, round up
             digits[^1] += 1
           break
-        elif v <= mi2:
-          if mi2 - v < v - mi:
-            # mi2 is closer to v
-            digits.add byte(d)
+
+        let d = floor(v/g - mi)        
+        let lo2 = lo + d*g
+        if v < lo2:
+          # arithmetics is no more valid
+          if up - v <= v - lo:
+            # up is close to v, round up
+            digits[^1] += 1
           break
-        elif mx2 <= v:
-          if v - mx2 < mx - v:
-            # mx2 is closer to v
-            digits.add byte(d)
-          # add carry
-          digits[^1] += 1
-          break
-        else:
-          # valid bound
-          mx = mx2
-          mi = mi2
-          digits.add byte(d)
+        
+        # valid bound
+        lo = lo2
+        digits.add byte(d)
 
       # remove trailing 0
       while digits.len > 0 and digits[^1] == 0:

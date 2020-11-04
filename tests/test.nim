@@ -4,7 +4,7 @@ import ../src/canonicaljson
 
 suite "canonicaljson":
 
-  test "canonicalizeJson":
+  test "canonify":
 
     # https://tools.ietf.org/html/rfc8785#section-3.2.4
     let ans = [
@@ -26,15 +26,8 @@ suite "canonicaljson":
       "literals": [newJNull(), true, false]
     }
 
-    let s = canonicalizeJson(input)
-    # echo s
-    # echo ans.mapIt(char(it)).join("")
-    check: s.len == ans.len
+    let s = canonify(input)
     check: s == ans.mapIt(char(it)).join("")
-    for i in 0 ..< ans.len:
-      assert s[i].ord == ans[i], "mismatch at position " & $i
-
-    assert s == """{"literals":[null,true,false],"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27],"string":"€$\u000f\nA'B\"\\\\\"/"}"""
 
   test "string - low ASCII":
     #[
@@ -61,7 +54,7 @@ suite "canonicaljson":
       0x75, 0x30, 0x30, 0x31, 0x64, 0x5c, 0x75, 0x30, 0x30, 0x31, 0x65, 0x5c,
       0x75, 0x30, 0x30, 0x31, 0x66, 0x22
     ]
-    let s = canonicalizeJson(newJString(
+    let s = canonify(newJString(
         "\0\1\2\3\4\5\6\7\8\9\10\11\12\13\14\15\16\17\18\19\20\21\22\23\24\25\26\27\28\29\30\31"));
 
     check: s.len == ans.len
@@ -74,7 +67,7 @@ suite "canonicaljson":
       "a": 2,
       "A": 1,
     }
-    let s = canonicalizeJson(json)
+    let s = canonify(json)
     check: s == """{"":0,"A":1,"a":2,"aa":3}"""
 
   # test "object key sorting 2":
@@ -88,7 +81,7 @@ suite "canonicaljson":
   #     "\u00f6": "Latin Small Letter O With Diaeresis"
   #   }
   #   let ans = """{"\r":"Carriage Return","1":"One","":"Control","ö":"Latin Small Letter O With Diaeresis","€":"Euro Sign","😀":"Emoji: Grinning Face","דּ":"Hebrew Letter Dalet With Dagesh"}"""
-  #   let s = canonicalizeJson(json)
+  #   let s = canonify(json)
   #   echo s
   #   echo ans
   #   echo s.len
@@ -104,7 +97,7 @@ suite "canonicaljson":
       "curency": "USD"
     }
     let ans = """{"amount":500,"curency":"USD","from_account":"543 232 625-3","to_account":"321 567 636-4"}"""
-    check: canonicalizeJson(json) == ans
+    check: canonify(json) == ans
 
   test "sample 2":
     # https://github.com/erdtman/canonicalize
@@ -117,5 +110,5 @@ suite "canonicaljson":
         "A": { }
     }
     let ans = """{"":"empty","1":{"\n":56,"f":{"F":5,"f":"hi"}},"10":{},"111":[{"E":"no","e":"yes"}],"A":{},"a":{}}"""
-    let s =  canonicalizeJson(json)
+    let s =  canonify(json)
     check: s == ans

@@ -1,6 +1,6 @@
 import json
 import algorithm
-import canonicaljson/add_j_float
+import canonicaljson/canonify_float
 
 # https://tools.ietf.org/html/rfc8785
 
@@ -14,7 +14,7 @@ proc cmpJString*(a,b: string): int =
   if a.len < b.len: return -1
   return 0
 
-proc addJString(result: var string, s: string) = 
+proc canonify(result: var string, s: string) = 
   ## Append canonical JSON to string
 
   let hex = "0123456789abcdefg"
@@ -43,7 +43,7 @@ proc addJString(result: var string, s: string) =
     else: result.add(c)
   result.add('"')
 
-proc canonicalizeJson*(result: var string, node: JsonNode) =  
+proc canonify*(result: var string, node: JsonNode) =  
   ## Append canonical JSON to string.
   
   var comma = false
@@ -53,7 +53,7 @@ proc canonicalizeJson*(result: var string, node: JsonNode) =
     for child in node.elems:
       if comma: result.add ","
       else: comma = true
-      result.canonicalizeJson child
+      result.canonify child
     result.add "]"
   of JObject:
     result.add "{"
@@ -64,25 +64,23 @@ proc canonicalizeJson*(result: var string, node: JsonNode) =
     for key in keys:
       if comma: result.add ","
       else: comma = true
-      result.addJString key
+      result.canonify key
       result.add ":"
-      canonicalizeJson(result, node[key])
+      canonify(result, node[key])
     result.add "}"
   of JString:
-    result.addJString(node.str)
+    result.canonify(node.str)
   of JInt:
-    when defined(js): result.add($node.num)
-    else: result.addInt(node.num)
+    result.canonify(node.num.float)
   of JFloat:
-    when defined(js): result.add($node.fnum)
-    else: result.addJFloat(node.fnum)
+    result.canonify(node.fnum)
   of JBool:
     result.add(if node.bval: "true" else: "false")
   of JNull:
     result.add "null"
 
-proc canonicalizeJson*(json: JsonNode): string = 
+proc canonify*(json: JsonNode): string = 
   ## Convert JsonNode to string according to RFC8785.
-  canonicalizeJson(result, json)
+  canonify(result, json)
   
 

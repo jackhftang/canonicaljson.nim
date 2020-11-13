@@ -7,7 +7,7 @@ Stringify JSON according to [RFC8785](https://tools.ietf.org/html/rfc8785).
 [API](https://jackhftang.github.io/canonicaljson.nim/canonicaljson.html)
 
 ```nim
-let s = canonicalizeJson(%*{
+let s = cannonify(%*{
   "numbers": [333333333.33333329, 1E30, 4.50,
               2e-3, 0.000000000000000000000000001],
   "string": "\u20ac$\u000f\u000aA'\u0042\u0022\u005c\\\"/",

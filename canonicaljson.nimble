@@ -1,6 +1,6 @@
 # Package
 
-version       = "1.1.0"
+version       = "1.1.2"
 author        = "Jack Tang"
 description   = "canonicaljson"
 license       = "MIT"
